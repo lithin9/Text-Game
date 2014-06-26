@@ -1,5 +1,9 @@
+package Model;
+
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Char 
 {
@@ -18,6 +22,7 @@ public class Char
 
 	HashMap<String, Integer> charInfo = new HashMap<String, Integer>();
 	HashMap<String, Double> charAttributes = new HashMap<String, Double>();//Previously Stats
+	HashMap<String, Double> skillAttributes = new HashMap<String, Double>();
 	HashMap<String, Double> limbStatus = new HashMap<String, Double>();
 	HashMap<String, Double> charStatus = new HashMap<String, Double>();
 	HashMap<String, Double> charPerks = new HashMap<String, Double>();
@@ -25,7 +30,7 @@ public class Char
 	HashMap<String, Double> hardCoreInfo = new HashMap<String, Double>();
 	HashMap<String, Double> playerInfluence = new HashMap<String, Double>();
 	HashMap<String, Double> equipment = new HashMap<String, Double>();
-	
+
 	
 	//TODO: lookup hash mapping.
 	/**
@@ -173,9 +178,9 @@ public class Char
 		 */
 		//Character Status Recovery
 		//Recovery is disable in hardcore mode.
-		charAttributes.put("Health Regen", 1);	//(Endurance+Constitution)/10
-		charAttributes.put("Magicka Regen", 1);	//(Intellect+Concentration)/10
-		charAttributes.put("Stamina Regen", 1);	//(Agility+Concentration)/10
+		charAttributes.put("Health Regen", 1.0);	//(Endurance+Constitution)/10
+		charAttributes.put("Magicka Regen", 1.0);	//(Intellect+Concentration)/10
+		charAttributes.put("Stamina Regen", 1.0);	//(Agility+Concentration)/10
 		
 		//Defensive Status
 		charAttributes.put("Armor Class", 0.5);
@@ -192,16 +197,15 @@ public class Char
 		/*
 		 *
 		 */
-		charAttributes.put("", );
-		Stats[0][18] = "Dodge Chance";
+		charAttributes.put("Dodge", 5.0);
+		/*
+		 *Percent chance that the character can dodge an attack.
+		 */
+		charAttributes.put("Block", 5.0);
 		/*
 		 *
 		 */
-		Stats[0][19] = "Block Chance";
-		/*
-		 *
-		 */
-		Stats[0][20] = "Poison Resistance";
+		charAttributes.put("Poison Resistance", 0.0);
 		/*
 		 * Poison Resistance is the effectiveness of poisons against you
 		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
@@ -209,30 +213,30 @@ public class Char
 		 */
 		
 		//Offensive Status
-		Stats[0][21] = "Attack Power";
+		charAttributes.put("Attack Power", 2.5);
 		/*
 		 * Determined by (Strength/Level)/2
 		 * This will be how much damage is done by the character.
 		 */
-		Stats[0][22] = "Magic Power";
+		charAttributes.put("Magic Power", 2.5);
 		/*
 		 * Determined by (Intelligence/Level)/2
 		 * This will be how much spell damage is done by the character.
 		 * Spells will have formulas that incorporate this. Includes healing power.
 		 */
-		Stats[0][23] = "Critical Chance";
+		charAttributes.put("Critical Chance", 10.0);
 		/*
 		 * Determined by.. not sure yet, agility is already OP as fuck.
 		 */
-		Stats[0][24] = "Physical Hit Chance";
+		charAttributes.put("Physical Hit Chance", 60.0);
 		/*
 		 *
 		 */
-		Stats[0][25] = "Magical Hit Chance";
+		charAttributes.put("Magical Hit Chance", 60.0);
 		/*
 		 *
 		 */
-		Stats[0][26] = "Combat Mastery";
+		charAttributes.put("Combat Mastery", 15.0);
 		/*
 		 * Combat mastery is determined by adding all three stats of the chosen class' stat group: physical, mental, ability/skill 
 		 * and dividing it by the current level. Dividing by level ensures a scale, but because your combat mastery has decreased, 
@@ -374,416 +378,445 @@ public class Char
 	 */
 	private void newLimbStatus() 
 	{
-		limbStatus[0][0] = "Head";
-		limbStatus[1][0] = "Torso";
-		limbStatus[2][0] = "Right Arm";
-		limbStatus[3][0] = "Left Arm";
-		limbStatus[4][0] = "Right Leg";
-		limbStatus[5][0] = "Left Leg";
-		limbStatus[6][0] = "Right Hand";
-		limbStatus[7][0] = "Left Hand";
-		limbStatus[8][0] = "Right Foot";
-		limbStatus[9][0] = "Left Foot";
-
-		limbStatus[0][1] = "8";
-		limbStatus[1][1] = "8";
-		limbStatus[2][1] = "8";
-		limbStatus[3][1] = "8";
-		limbStatus[4][1] = "8";
-		limbStatus[5][1] = "8";
-		limbStatus[6][1] = "8";
-		limbStatus[7][1] = "8";
-		limbStatus[8][1] = "8";
-		limbStatus[9][1] = "8";
+		limbStatus.put("Head", 8.0);
+		limbStatus.put("Right Eye", 8.0);
+		limbStatus.put("Left Eye", 8.0);
+		limbStatus.put("Neck", 8.0);
+		limbStatus.put("Torso", 8.0);
+		limbStatus.put("Back", 8.0);
+		limbStatus.put("Right Shoulder", 8.0);
+		limbStatus.put("Left Shoulder", 8.0);
+		limbStatus.put("Right Arm", 8.0);
+		limbStatus.put("Left Arm", 8.0);
+		limbStatus.put("Right Hand", 8.0);
+		limbStatus.put("Left Hand", 8.0);
+		limbStatus.put("Right Leg", 8.0);
+		limbStatus.put("Left Leg", 8.0);
+		limbStatus.put("Right Foot", 8.0);
+		limbStatus.put("Left Foot", 8.0);
 	}
 	
+	/**
+	 * Assign stats to a new character
+	 */
 	private void newCharStatus()
 	{
-		
+		//TODO: Randomize stats, I guess.
 	}
 	
+	/**
+	 * Assigns random perks.
+	 */
 	private void newCharPerks()
 	{
 		//TODO: Determine randomized perks, set to array
 	}
 	
+	/**
+	 * Not sure what to put into here. 
+	 */
 	private void newGameInfo()
 	{
 		//TODO: finish what the game info array should be, then default it in here. 
 	}
 	
+	/**
+	 * Creates a new save file and records all the random stuffs.
+	 */
 	private void newSaveFile()
 	{
 		//TODO: write the save file
 	}
 	
 	//Level up stuffs
-	private void addStat(int numberOfStats, String stat)
+	/**
+	 * Adds a new stat or updates a new one.
+	 * If you're trying to update a stat and spell the name of it wrong, it'll add it in but that won't do anything because no other function will understand the new stat.
+	 * @param numberOfStats
+	 * @param stat
+	 */
+	private void addStat(double numberOfStats, String stat)
 	{
-		//TODO: switch statement that'll add appropriate number of stats to the appropriate stat. Will also update combat stuffs
+		charAttributes.put(stat, numberOfStats);
 	}
 
 	/**
-	 * Print out all the stats of the user
+	 * Print out all the stats of the character
 	 */
 	public void printStats()
 	{
-		for(int i=0; i<Stats.length; i++)
+		Set<String> attributeKeys = charAttributes.keySet();
+		for(String key: attributeKeys)
 		{
-			System.out.println(Stats[0][i]+": "+Stats[1][i]+".");
+			System.out.println(key+": "+charAttributes.get(key));
 		}
 	}
 	
+	/**
+	 * Load the save file attached to the 
+	 * @param charName
+	 */
 	public void loadGame(String charName)
 	{
 		//TODO: Load in the save file based on charName
 		//Use file reader or whatever, arrays are differentiated by ||, elements seperated by commas
 	}
 
-	public String charName()
+	/**
+	 * records the users input for a new character name.
+	 * @return
+	 */
+	public String newCharName()
 	{
 		Scanner input = new Scanner(System.in);
-		String userName = input.nextLine();
-		return userName;
-	}
-	
-	public String charInfoReport(String infoQuery)
-	{
-		String infoToReport = "";
+		name = input.nextLine();
 		
-		for(int i=0; i<charInfo.length; i++)
-		{
-			if(infoQuery.equals(charInfo[i][0]))
-			{
-				infoToReport = charInfo[i][1];
-			}
-		}
-		return infoToReport;
+		return name;
 	}
 	
-	public String charInfoUpdate()
+	/**
+	 * returns the numerical value of the requested character information.
+	 * If no key is found, then returns -1
+	 * @param key
+	 * @return Integer value of charInfo
+	 */
+	public Integer getCharacterInformation(String key)
 	{
-		return null;
+		if(charInfo.get(key) != null)
+			return charInfo.get(key);
+		else
+			return -1;
+	}
+	
+	/**
+	 * Sets or adds a new key and value into the charInfo HashMap
+	 * @param key
+	 * @param value
+	 */
+	public void setCharacterInformation(String key, Integer value)
+	{
+		charInfo.put(key, value);
 	}
 	
 	public String limbStatusReport(String limbQuery)
 	{
-		String limbToReport = "";
-		int limbStatusNum = 0;
+		double limbStatusNum = limbStatus.get(limbQuery);;
 		long random = System.nanoTime()%11;
 		
-		for(int i=0; i<limbStatus.length; i++)
+		
+		
+		/*for(int i=0; i<limbStatus.length; i++)
 		{
 			if(limbQuery.equals(limbStatus[i][0]))
 			{
 				limbToReport = limbStatus[i][0];
 				limbStatusNum = Integer.valueOf(limbStatus[i][1]);
 			}
-		}
+		}*/
 		
-		if(limbToReport.equals(""))
+		if(limbQuery.equals(""))
 			return "That limb doesn't exist.";
 		
-		if(limbStatusNum > 10 || limbStatusNum < 0)
+		if(limbStatusNum > 10.0 || limbStatusNum < 0.0)
 			return "Either you're a fucking robot with titanium limbs, or you changed the save file, good job, cheater.";
 		
 		//TODO: Finish these 132 status reports
 		if(random == limbStatusNum)
 		{//if the random number happens to be the same as the status number, then tell it how it is.
-			if(limbStatusNum == 0)//Gone
-				return "Ain't gonna lie, your "+limbToReport+" is fucking gone.";
-			if(limbStatusNum == 1)//Decaying
-				return "Your "+limbToReport+" is dead and decaying. Better go get that removed.";
-			if(limbStatusNum == 2)//Compound fracture
-				return "You can clearly see your bone sticking out of your "+limbToReport+", you better get that put back in.";
-			if(limbStatusNum == 3)//Broken
-				return "You have a broke "+limbToReport+", you should see a doctor about getting it fixed.";
-			if(limbStatusNum == 4)//Deeply cut
-				return "These is a deep cut on your "+limbToReport+".";
-			if(limbStatusNum == 5)//Cut
-				return "You have a cut on your "+limbToReport+".";
-			if(limbStatusNum == 6)//Bruised
-				return "Your "+limbToReport+" is quite bruised.";
-			if(limbStatusNum == 7)//Sore
-				return "Your "+limbToReport+" is very sore.";
-			if(limbStatusNum == 8)//Normal
-				return "You feel like your "+limbToReport+" is normal.";
-			if(limbStatusNum == 9)//Very good
-				return "You feel very good about the status of your "+limbToReport+".";
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
+				return "Ain't gonna lie, your "+limbQuery+" is fucking gone.";
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
+				return "Your "+limbQuery+" is dead and decaying. Better go get that removed.";
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
+				return "You can clearly see your bone sticking out of your "+limbQuery+", you better get that put back in.";
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
+				return "You have a broken "+limbQuery+", you should see a doctor about getting it fixed.";
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
+				return "These is a deep cut on your "+limbQuery+".";
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
+				return "You have a cut on your "+limbQuery+".";
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
+				return "Your "+limbQuery+" is quite bruised.";
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
+				return "Your "+limbQuery+" is very sore.";
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
+				return "You feel like your "+limbQuery+" is normal.";
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
+				return "You feel very good about the status of your "+limbQuery+".";
 			if(limbStatusNum == 10)//Perfect
-				return "Your "+limbToReport+" feels fucking amazing and more powerful than ever.";
+				return "Your "+limbQuery+" feels fucking amazing and more powerful than ever.";
 		}
 		if(random == 0)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "Whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";	
 		}
 		if(random == 1)
 		{
-			if(limbStatusNum == 0)//Gone
-				return "Though you can still feel "+limbToReport+", I assure you, it's gone forever.";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
+				return "Though you can still feel "+limbQuery+", I assure you, it's gone forever.";
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";	
 		}
 		if(random == 2)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 3)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 4)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 5)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 6)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 7)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 8)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 9)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
 		}
 		if(random == 10)
 		{
-			if(limbStatusNum == 0)//Gone
+			if(limbStatusNum >= 0 && limbStatusNum < 1)//Gone
 				return "whatever";
-			if(limbStatusNum == 1)//Decaying
+			if(limbStatusNum >= 1 && limbStatusNum < 2)//Decaying
 				return "whatever";
-			if(limbStatusNum == 2)//Compound fracture
+			if(limbStatusNum >= 2 && limbStatusNum < 3)//Compound fracture
 				return "whatever";
-			if(limbStatusNum == 3)//Broken
+			if(limbStatusNum >= 3 && limbStatusNum < 4)//Broken
 				return "whatever";
-			if(limbStatusNum == 4)//Deeply cut
+			if(limbStatusNum >= 4 && limbStatusNum < 5)//Deeply cut
 				return "whatever";
-			if(limbStatusNum == 5)//Cut
+			if(limbStatusNum >= 5 && limbStatusNum < 6)//Cut
 				return "whatever";
-			if(limbStatusNum == 6)//Bruised
+			if(limbStatusNum >= 6 && limbStatusNum < 7)//Bruised
 				return "whatever";
-			if(limbStatusNum == 7)//Sore
+			if(limbStatusNum >= 7 && limbStatusNum < 8)//Sore
 				return "whatever";
-			if(limbStatusNum == 8)//Normal
+			if(limbStatusNum >= 8 && limbStatusNum < 9)//Normal
 				return "whatever";
-			if(limbStatusNum == 9)//Very good
+			if(limbStatusNum >= 9 && limbStatusNum < 10)//Very good
 				return "whatever";
 			if(limbStatusNum == 10)//Perfect
 				return "whatever";
@@ -791,5 +824,4 @@ public class Char
 		//if for whatever reason it reaches here, meaning it couldn't successfully find the limb or condition number, then print out an ambigious statement about it.
 		return "I've got nothing to tell you about that...";
 	}
-	
 }

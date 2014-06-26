@@ -1,3 +1,5 @@
+package Model;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,7 +7,7 @@ import java.util.Scanner;
 import View.WordUtils;
 
 
-public class Intro extends Char
+public class Intro
 {
 	Failure failure = new Failure();
 	int x = 0;
@@ -19,10 +21,11 @@ public class Intro extends Char
 	int maxHunger = 100;
 	int hunger = 25;
 	Commands command = new Commands();
+	static Char character = new Char();
 	
-	public void testIntro()
+	public static void testIntro()
 	{
-		newCharacter();
+		character.newCharacter();
 		//System.out.println()
 		String test = "This is a test of the word wrapping capabilities of this motherfuckinggoddamnit program that I downloaded. I don't know how many words this is, but I suppose we'll fucking find out, now won't we? Shiiiet.";
 		test = WordUtils.wrap(test, 30, "test", true);
@@ -128,7 +131,7 @@ public class Intro extends Char
 						System.out.println("Your eyes instantly become fixated and mesmerized"
 								+ "\nupon a tattoo on your arm with a name written on it."
 								+ "\nChoose your name:");
-						charName = charName();
+						charName = character.newCharName();
 						System.out.println(charName+", that's what it says bold 'n clear and"
 										+ "\nthough your mind is slow to put the pieces together you"
 										+ "\nfinally figure out... it must be your name... "+charName

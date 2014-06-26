@@ -1,4 +1,4 @@
-/*
+ /*
   * Copyright 2002-2005 The Apache Software Foundation.
   * 
   * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +13,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+
+package View;
 
  
  /**
@@ -91,7 +93,7 @@
              return null;
          }
          if (newLineStr == null) {
-             newLineStr = SystemUtils.LINE_SEPARATOR;
+             newLineStr = System.getProperty("line.separator");//SystemUtils.LINE_SEPARATOR;
          }
          if (wrapLength < 1) {
              wrapLength = 1;
