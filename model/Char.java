@@ -1,6 +1,5 @@
-package Model;
+package model;
 
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Set;
@@ -9,17 +8,7 @@ public class Char
 {
 	String name = new String();//retrieveStats("name");
 	String charClass = new String();//retrieveStats("class");
-	/*String[][] charInfo2 = new String[2][4];
-	String[][] Stats = new String[3][27];//retrieveStats2dArr("stats");
-	String[][] limbStatus = new String[2][10];//retrieveStats2dArr("limbStatus");
-	String[][] charStatus = new String[2][9];
-	String[][] charPerks = new String[2][20];//TODO: fix this number
-	String[][] gameInfo = new String[2][3];
-	String[][] hardCoreInfo = new String[2][5];//These settings will be used only for characters selecting hardcore
-	String[][] playerInfluence = new String[2][3];
-	String[][] equipment = new String[2][10];//[0][i] = Armor slot names, [1][i] = armor ID(links to a armor Class with all the ids and related stats.*/
 	
-
 	HashMap<String, Integer> charInfo = new HashMap<String, Integer>();
 	HashMap<String, Double> charAttributes = new HashMap<String, Double>();//Previously Stats
 	HashMap<String, Double> skillAttributes = new HashMap<String, Double>();
@@ -40,11 +29,10 @@ public class Char
 	{
 		//Set all variables.
 		//Things like experience, level, skill points, attribute points
-		@SuppressWarnings("resource")//TODO: check to see if closing input will fuck up other scanners
 		Scanner input = new Scanner(System.in);
-		System.out.print("Please enter a name: ");
+		System.out.println("Please enter a name: ");
 		name = input.nextLine();
-		System.out.print("\nPlease choose a class:\n1.Fighter\n2.Rogue\n3.Acolyte\n");
+		System.out.println("Please choose a class:\n1.Fighter\n2.Rogue\n3.Acolyte");
 		switch (input.nextLine()) {
 		case "1": 
 			charClass = "Fighter";
@@ -65,6 +53,7 @@ public class Char
 		newGameInfo();
 		
 		newSaveFile();
+		input.close();
 	}
 
 	/**

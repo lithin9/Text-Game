@@ -1,10 +1,9 @@
-package Model;
+package model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
-import View.WordUtils;
 
 
 public class Intro
@@ -28,8 +27,9 @@ public class Intro
 		character.newCharacter();
 		//System.out.println()
 		String test = "This is a test of the word wrapping capabilities of this motherfuckinggoddamnit program that I downloaded. I don't know how many words this is, but I suppose we'll fucking find out, now won't we? Shiiiet.";
-		test = WordUtils.wrap(test, 30, "test", true);
+		
 		System.out.println(test);
+		
 	}
 	
 	public void buildMapGrid()
