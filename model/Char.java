@@ -1,5 +1,6 @@
 package model;
 
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Set;
@@ -9,16 +10,17 @@ public class Char
 	String name = new String();//retrieveStats("name");
 	String charClass = new String();//retrieveStats("class");
 	
-	HashMap<String, Integer> charInfo = new HashMap<String, Integer>();
-	HashMap<String, Double> charAttributes = new HashMap<String, Double>();//Previously Stats
-	HashMap<String, Double> skillAttributes = new HashMap<String, Double>();
-	HashMap<String, Double> limbStatus = new HashMap<String, Double>();
-	HashMap<String, Double> charStatus = new HashMap<String, Double>();
-	HashMap<String, Double> charPerks = new HashMap<String, Double>();
-	HashMap<String, Double> gameInfo = new HashMap<String, Double>();
-	HashMap<String, Double> hardCoreInfo = new HashMap<String, Double>();
-	HashMap<String, Double> playerInfluence = new HashMap<String, Double>();
-	HashMap<String, Double> equipment = new HashMap<String, Double>();
+	LinkedHashMap<String, Integer> charInfo = new LinkedHashMap<String, Integer>();
+	LinkedHashMap<String, Double> charAttributes = new LinkedHashMap<String, Double>();//Previously Stats
+	LinkedHashMap<String, Double> dependantCharAttributes = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> skillAttributes = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> limbStatus = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> charStatus = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> charPerks = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> gameInfo = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> hardCoreInfo = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> playerInfluence = new LinkedHashMap<String, Double>();
+	LinkedHashMap<String, Double> equipment = new LinkedHashMap<String, Double>();
 
 	
 	//TODO: lookup hash mapping.
@@ -44,15 +46,16 @@ public class Char
 			charClass = "Acolyte";
 		break;
 		}
-		newCharInfo();
-		newBaseStats();
-		newSkills();
-		newLimbStatus();
-		newCharStatus();
-		newCharPerks();
-		newGameInfo();
+		buildCharInfo();
+		buildBaseStats();
+		generateBonusStats();
+		buildDependantStats();
+		buildLimbStatus();
+		buildCharStatus();
+		buildCharPerks();
+		buildGameInfo();
 		
-		newSaveFile();
+		saveFile();
 		input.close();
 	}
 
@@ -60,33 +63,22 @@ public class Char
 	 * Sets the character into like experience, level, skillpoints, attributePoints, and morality
 	 * All values default to zero, uses charInfo[][].
 	 */
-	private void newCharInfo() 
+	private void buildCharInfo() 
 	{
 		charInfo.put("Experience", 0);
-		charInfo.put("Level", 0);
-		charInfo.put("SkillPoints", 0);
-		charInfo.put("AttributePoints", 0);
+		charInfo.put("Level", 1);
+		charInfo.put("SkillPoints", 3);
+		charInfo.put("AttributePoints", 50);
 		charInfo.put("Morality", 0);
 	}
 
 	/**
 	 * Sets the defaults for the character stats.
 	 */
-	private void newBaseStats()
+	private void buildBaseStats()
 	{
 		//Character Status - Columns
-		//Main stats gain 5 points per level, Secondary stats gain 2.5 points per level, Ternary stats gain 1.25 points per level
-		charAttributes.put("Health", 10.0);			//Fighter Main Stat, Rogue Secondary Stat, Acolyte Ternary Stat
 		
-		//Self explainatory
-		charAttributes.put("Stamina", 20.0);
-		/*Rogue Main Stat, Fighter Secondary Stat, Acolyte Ternary Stat
-		 *Determines the amount of melee abilities that can be used per fight
-		 */
-		charAttributes.put("Magicka", 15.0);
-		/*Acolyte Main Stat, Rogue Ternary Stat, Fighter Ternary Stat
-		 *Determines the amount of magical abilities that can be used in a fight
-		 */
 		/*NOTE: Until level 5, where the player will be able to choose a class,
 		 *they will gain 0.4 points in the attribute charactistic of their class:
 		 *fighter:physical,acolyte:mental,rogue:ability
@@ -165,75 +157,6 @@ public class Char
 		/*
 		 * Determines magical hit chance
 		 */
-		//Character Status Recovery
-		//Recovery is disable in hardcore mode.
-		charAttributes.put("Health Regen", 1.0);	//(Endurance+Constitution)/10
-		charAttributes.put("Magicka Regen", 1.0);	//(Intellect+Concentration)/10
-		charAttributes.put("Stamina Regen", 1.0);	//(Agility+Concentration)/10
-		
-		//Defensive Status
-		charAttributes.put("Armor Class", 0.5);
-		/*
-		 * Armor Class determines physical damage reduction: (Armor Class + (yourLevel - enemyLevel)) / yourLevel(or their level)) = Percent of damage to take away from
-		 * Example: You have 23 armor class, you're level 10 and the enemy is level 12. (23+(10-12))/10 = 2.1
-		 */
-		charAttributes.put("Magic Resistance", 0.5);//TODO: Convert resistances into individual magics
-		/*
-		 *
-		 */
-
-		charAttributes.put("Resiliance", 5.0);//Used to be critical resistance
-		/*
-		 *
-		 */
-		charAttributes.put("Dodge", 5.0);
-		/*
-		 *Percent chance that the character can dodge an attack.
-		 */
-		charAttributes.put("Block", 5.0);
-		/*
-		 *
-		 */
-		charAttributes.put("Poison Resistance", 0.0);
-		/*
-		 * Poison Resistance is the effectiveness of poisons against you
-		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
-		 * but for every point about 1 it will do 2 points of damage
-		 */
-		
-		//Offensive Status
-		charAttributes.put("Attack Power", 2.5);
-		/*
-		 * Determined by (Strength/Level)/2
-		 * This will be how much damage is done by the character.
-		 */
-		charAttributes.put("Magic Power", 2.5);
-		/*
-		 * Determined by (Intelligence/Level)/2
-		 * This will be how much spell damage is done by the character.
-		 * Spells will have formulas that incorporate this. Includes healing power.
-		 */
-		charAttributes.put("Critical Chance", 10.0);
-		/*
-		 * Determined by.. not sure yet, agility is already OP as fuck.
-		 */
-		charAttributes.put("Physical Hit Chance", 60.0);
-		/*
-		 *
-		 */
-		charAttributes.put("Magical Hit Chance", 60.0);
-		/*
-		 *
-		 */
-		charAttributes.put("Combat Mastery", 15.0);
-		/*
-		 * Combat mastery is determined by adding all three stats of the chosen class' stat group: physical, mental, ability/skill 
-		 * and dividing it by the current level. Dividing by level ensures a scale, but because your combat mastery has decreased, 
-		 * doesn't mean you are less of a fighter, it means others on your level are better.
-		 * Combat Mastery: Adds a bonus to all your combat checks related to your class. Say you are a ranger, and you go for a long ranged
-		 * shot, you will get a bonus of the value of your combat mastery to be able to hit that. Refuse to put stats in your main, and your
-		 * combat will get rusty.
-		 */
 		
 		/*
 		 * Level Scaling System:
@@ -302,7 +225,92 @@ public class Char
 		
 	}
 	
-	private void newSkills()
+	private void buildDependantStats()
+	{
+		//Main stats gain 5 points per level, Secondary stats gain 2.5 points per level, Ternary stats gain 1.25 points per level
+		dependantCharAttributes.put("Health", 10.0);			//Fighter Main Stat, Rogue Secondary Stat, Acolyte Ternary Stat
+		
+		//Self explainatory
+		dependantCharAttributes.put("Stamina", 20.0);
+		/*Rogue Main Stat, Fighter Secondary Stat, Acolyte Ternary Stat
+		 *Determines the amount of melee abilities that can be used per fight
+		 */
+		dependantCharAttributes.put("Magicka", 15.0);
+		/*Acolyte Main Stat, Rogue Ternary Stat, Fighter Ternary Stat
+		 *Determines the amount of magical abilities that can be used in a fight
+		 */
+		//Character Status Recovery
+		//Recovery is disable in hardcore mode.
+		dependantCharAttributes.put("Health Regen", ((charAttributes.get("Endurance") + charAttributes.get("Constitution"))/ 10));	//(Endurance+Constitution)/10
+		dependantCharAttributes.put("Magicka Regen", ((charAttributes.get("Intellect") + charAttributes.get("Concentration"))/ 10));	//(Intellect+Concentration)/10
+		dependantCharAttributes.put("Stamina Regen", ((charAttributes.get("Agility") + charAttributes.get("Concentration"))/ 10));	//(Agility+Concentration)/10
+		
+		//Defensive Status
+		dependantCharAttributes.put("Armor Class", 0.0);
+		/*
+		 * Armor Class determines physical damage reduction: (Armor Class + (yourLevel - enemyLevel)) / yourLevel(or their level)) = Percent of damage to take away from
+		 * Example: You have 23 armor class, you're level 10 and the enemy is level 12. (23+(10-12))/10 = 2.1
+		 */
+		dependantCharAttributes.put("Magic Resistance", 0.5);//TODO: Convert resistances into individual magics
+		/*
+		 *
+		 */
+
+		dependantCharAttributes.put("Resiliance", 5.0);//Used to be critical resistance
+		/*
+		 *
+		 */
+		dependantCharAttributes.put("Dodge", 5.0);
+		/*
+		 *Percent chance that the character can dodge an attack.
+		 */
+		dependantCharAttributes.put("Block", 5.0);
+		/*
+		 *
+		 */
+		dependantCharAttributes.put("Poison Resistance", 0.0);
+		/*
+		 * Poison Resistance is the effectiveness of poisons against you
+		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
+		 * but for every point about 1 it will do 2 points of damage
+		 */
+		
+		//Offensive Status
+		dependantCharAttributes.put("Attack Power", 2.5);
+		/*
+		 * Determined by (Strength/Level)/2
+		 * This will be how much damage is done by the character.
+		 */
+		dependantCharAttributes.put("Magic Power", 2.5);
+		/*
+		 * Determined by (Intelligence/Level)/2
+		 * This will be how much spell damage is done by the character.
+		 * Spells will have formulas that incorporate this. Includes healing power.
+		 */
+		dependantCharAttributes.put("Critical Chance", 10.0);
+		/*
+		 * Determined by.. not sure yet, agility is already OP as fuck.
+		 */
+		dependantCharAttributes.put("Physical Hit Chance", 60.0);
+		/*
+		 *
+		 */
+		dependantCharAttributes.put("Magical Hit Chance", 60.0);
+		/*
+		 *
+		 */
+		dependantCharAttributes.put("Combat Mastery", 15.0);
+		/*
+		 * Combat mastery is determined by adding all three stats of the chosen class' stat group: physical, mental, ability/skill 
+		 * and dividing it by the current level. Dividing by level ensures a scale, but because your combat mastery has decreased, 
+		 * doesn't mean you are less of a fighter, it means others on your level are better.
+		 * Combat Mastery: Adds a bonus to all your combat checks related to your class. Say you are a ranger, and you go for a long ranged
+		 * shot, you will get a bonus of the value of your combat mastery to be able to hit that. Refuse to put stats in your main, and your
+		 * combat will get rusty.
+		 */
+	}
+	
+	private void generateBonusStats()
 	{
 		int gainStatAt = 40;
 		int additionalStatCount = 0;
@@ -325,34 +333,44 @@ public class Char
 		{
 			for(int i=0; i<additionalStatCount; i++)
 			{
-				int random = (int) (System.nanoTime()%9);
+				int random = (int) randomizer(12.0);
+				
 				switch(random){
 				case 0:
-					addStat(1,"Strength");
+					addStat("Strength", 1);
 					break;
 				case 1:
-					addStat(1,"Endurance");
+					addStat("Endurance", 1);
 					break;
 				case 2:
-					addStat(1,"Constitution");
+					addStat("Constitution", 1);
 					break;
 				case 3:
-					addStat(1,"Intellect");
+					addStat("Intellect", 1);
 					break;
 				case 4:
-					addStat(1,"Perception");
+					addStat("Perception", 1);
 					break;
 				case 5:
-					addStat(1,"Wisdom");
+					addStat("Wisdom", 1);
 					break;
 				case 6:
-					addStat(1,"Agility");
+					addStat("Agility", 1);
 					break;
 				case 7:
-					addStat(1,"Accuracy");
+					addStat("Accuracy", 1);
 					break;
 				case 8:
-					addStat(1,"Concentration");
+					addStat("Concentration", 1);
+					break;
+				case 9:
+					addStat("Agility", 1);
+					break;
+				case 10:
+					addStat("Accuracy", 1);
+					break;
+				case 11:
+					addStat("Concentration", 1);
 					break;
 				}
 			}
@@ -365,7 +383,7 @@ public class Char
 	 * 0 = gone
 	 * 1 = 
 	 */
-	private void newLimbStatus() 
+	private void buildLimbStatus() 
 	{
 		limbStatus.put("Head", 8.0);
 		limbStatus.put("Right Eye", 8.0);
@@ -388,7 +406,7 @@ public class Char
 	/**
 	 * Assign stats to a new character
 	 */
-	private void newCharStatus()
+	private void buildCharStatus()
 	{
 		//TODO: Randomize stats, I guess.
 	}
@@ -396,7 +414,7 @@ public class Char
 	/**
 	 * Assigns random perks.
 	 */
-	private void newCharPerks()
+	private void buildCharPerks()
 	{
 		//TODO: Determine randomized perks, set to array
 	}
@@ -404,7 +422,7 @@ public class Char
 	/**
 	 * Not sure what to put into here. 
 	 */
-	private void newGameInfo()
+	private void buildGameInfo()
 	{
 		//TODO: finish what the game info array should be, then default it in here. 
 	}
@@ -412,7 +430,7 @@ public class Char
 	/**
 	 * Creates a new save file and records all the random stuffs.
 	 */
-	private void newSaveFile()
+	private void saveFile()
 	{
 		//TODO: write the save file
 	}
@@ -420,13 +438,18 @@ public class Char
 	//Level up stuffs
 	/**
 	 * Adds a new stat or updates a new one.
-	 * If you're trying to update a stat and spell the name of it wrong, it'll add it in but that won't do anything because no other function will understand the new stat.
-	 * @param numberOfStats
-	 * @param stat
+	 * If you're trying to update a stat and spell the name of it wrong, 
+	 * it'll add it in but that won't do anything because no other function will understand the new stat.
+	 * You should never have to add a stat that isn't already defined. 
+	 * @param value
+	 * @param key
 	 */
-	private void addStat(double numberOfStats, String stat)
+	private void addStat(String key, double value)
 	{
-		charAttributes.put(stat, numberOfStats);
+		if(charAttributes.get(key) != null)
+			charAttributes.put(key, charAttributes.get(key)+value);
+		else
+			charAttributes.put(key, value);
 	}
 
 	/**
@@ -435,9 +458,13 @@ public class Char
 	public void printStats()
 	{
 		Set<String> attributeKeys = charAttributes.keySet();
+		int space = 0;
 		for(String key: attributeKeys)
 		{
+			if(space%3 == 0)
+				System.out.print("\n");
 			System.out.println(key+": "+charAttributes.get(key));
+			space++;
 		}
 	}
 	
@@ -487,21 +514,61 @@ public class Char
 		charInfo.put(key, value);
 	}
 	
+	public double randomizer(double max)
+	{
+		double random = Math.random();
+		
+		return max*random;
+	}
+	
+	public double randomizer(double max, double modifier)
+	{
+		double random = Math.random();
+		
+		return (max*random)+modifier;
+	}
+	
+	public double[] randomizer(double max, int rolls)
+	{
+		double random;
+		
+		double[] results = new double[rolls];
+		for(int i=0; i<rolls; i++)
+		{
+			random = Math.random();
+			results[i] = max*random;
+		}
+		return results;
+	}
+	
+	public double[] randomizer(double max, int rolls, double modifier)
+	{
+		double random;
+		
+		double[] results = new double[rolls];
+		for(int i=0; i<rolls; i++)
+		{
+			random = Math.random();
+			results[i] = (max*random)+modifier;
+		}
+		return results;
+	}
+	
+	public void levelSystemExample(int max)
+	{
+		double baseRequirement = 100;
+		for(int i=0; i<max; i++)
+		{
+			if(i != 0)
+				baseRequirement = (baseRequirement*1.25) + 100;
+			System.out.println("The exp requirement for level "+(i+1)+" is: "+baseRequirement);
+		}
+	}
+	
 	public String limbStatusReport(String limbQuery)
 	{
 		double limbStatusNum = limbStatus.get(limbQuery);;
 		long random = System.nanoTime()%11;
-		
-		
-		
-		/*for(int i=0; i<limbStatus.length; i++)
-		{
-			if(limbQuery.equals(limbStatus[i][0]))
-			{
-				limbToReport = limbStatus[i][0];
-				limbStatusNum = Integer.valueOf(limbStatus[i][1]);
-			}
-		}*/
 		
 		if(limbQuery.equals(""))
 			return "That limb doesn't exist.";
