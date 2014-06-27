@@ -35,16 +35,16 @@ public class Char
 		Scanner input = new Scanner(System.in);
 		System.out.println("Please enter a name: ");
 		name = input.nextLine();
-		System.out.println("Please choose a class:\n1.Fighter\n2.Rogue\n3.Acolyte");
+		System.out.println("Please choose a class:\n1.Fighter\n2.Acolyte\n3.Rogue");
 		switch (input.nextLine()) {
 		case "1": 
 			charClass.put("Main", "Fighter");
 		break;
 		case "2":
-			charClass.put("Main", "Rogue");
+			charClass.put("Main", "Acolyte");
 		break;
 		case "3": 
-			charClass.put("Main", "Acolyte");
+			charClass.put("Main", "Rogue");
 		break;
 		}
 		buildCharInfo();
@@ -53,7 +53,6 @@ public class Char
 		generateRandomStats();
 		buildDependantStats();
 		buildLimbStatus();
-		buildCharStatus();
 		buildCharPerks();
 		buildGameInfo();
 		
@@ -228,19 +227,22 @@ public class Char
 		
 	}
 	
+	/**This will generate the stats that are dependant on 
+	 * 
+	 */
 	private void buildDependantStats()
 	{
 		//Main stats gain 5 points per level, Secondary stats gain 2.5 points per level, Ternary stats gain 1.25 points per level
 		dependantCharAttributes.put("Health", (charAttributes.get("Constitution") * 4.0));			//Fighter Main Stat, Rogue Secondary Stat, Acolyte Ternary Stat
 		
+		dependantCharAttributes.put("Magicka", (charAttributes.get("Wisdom") * 4.0));
+		/*Acolyte Main Stat, Rogue Ternary Stat, Fighter Ternary Stat
+		 *Determines the amount of magical abilities that can be used in a fight
+		 */
 		//Self explainatory
 		dependantCharAttributes.put("Stamina", (charAttributes.get("Endurance") * 4.0));
 		/*Rogue Main Stat, Fighter Secondary Stat, Acolyte Ternary Stat
 		 *Determines the amount of melee abilities that can be used per fight
-		 */
-		dependantCharAttributes.put("Magicka", (charAttributes.get("Wisdom") * 4.0));
-		/*Acolyte Main Stat, Rogue Ternary Stat, Fighter Ternary Stat
-		 *Determines the amount of magical abilities that can be used in a fight
 		 */
 		//Character Status Recovery
 		//Recovery is disable in hardcore mode.
@@ -254,55 +256,81 @@ public class Char
 		 * Armor Class determines physical damage reduction: (Armor Class + (yourLevel - enemyLevel)) / yourLevel(or their level)) = Percent of damage to take away from
 		 * Example: You have 23 armor class, you're level 10 and the enemy is level 12. (23+(10-12))/10 = 2.1
 		 */
-		dependantCharAttributes.put("Magic Resistance", 0.5);//TODO: Convert resistances into individual magics
+		dependantCharAttributes.put("Magic Resistance", 0.5);
 		/*
-		 *
+		 * //TODO: Convert resistances into individual magics
+		 * 
+		 * poison is now a magic
+		 * Poison Resistance is the effectiveness of poisons against you
+		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
+		 * but for every point above 1 it will do 2 points of damage
 		 */
 
 		dependantCharAttributes.put("Resiliance", ((charAttributes.get("Endurance") / 3) + charInfo.get("Level")));//Used to be critical resistance
 		/*
-		 *
+		 * The percent chance that you'll not get critically hit, if the enemy scores a critical
 		 */
-		dependantCharAttributes.put("Dodge", (charAttributes.get("Constitution") + charInfo.get("Level")));
+		
+		
+		dependantCharAttributes.put("Dodge", (charAttributes.get("Agility") + charInfo.get("Level")));
 		/*
 		 * Percent chance that the character can dodge an attack.
 		 * Note that the enemies agility will negate your dodge chance.
 		 */
 		dependantCharAttributes.put("Block", (charAttributes.get("Constitution") + charInfo.get("Level")));
 		/*
-		 *
+		 *The percent chance that your character is able to block something.
 		 */
-		dependantCharAttributes.put("Poison Resistance", 0.0);
+		dependantCharAttributes.put("Parry", (charAttributes.get("Accuracy") + charInfo.get("Level")));
 		/*
-		 * Poison Resistance is the effectiveness of poisons against you
-		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
-		 * but for every point above 1 it will do 2 points of damage
+		 * The percent chance you are accurate enough to parry an attack.
 		 */
 		
+		
 		//Offensive Status
-		dependantCharAttributes.put("Attack Power", ((charAttributes.get("Endurance") * 1.33) + charInfo.get("Level")));
+		dependantCharAttributes.put("Melee Attack Power", ((charAttributes.get("Endurance") * 1.33) + charInfo.get("Level")));
 		/*
 		 * Determined by (Strength/Level)/2
 		 * This will be how much damage is done by the character.
 		 */
-		dependantCharAttributes.put("Magic Power", ((charAttributes.get("Intellect") * 1.33) + charInfo.get("Level")));
+		dependantCharAttributes.put("Magic Attack Power", ((charAttributes.get("Intellect") * 1.33) + charInfo.get("Level")));
 		/*
 		 * Determined by (Intelligence/Level)/2
 		 * This will be how much spell damage is done by the character.
 		 * Spells will have formulas that incorporate this. Includes healing power.
 		 */
+		dependantCharAttributes.put("Ranged Attack Power", ((charAttributes.get("Concentration") * 1.33) + charInfo.get("Level")));
+		/*
+		 * Ranged attack power.
+		 */
+		
+		
 		dependantCharAttributes.put("Critical Chance", ((charAttributes.get("Accuracy") / 3) + charInfo.get("Level")));
 		/*
 		 * Determined by accuracy.
 		 */
-		dependantCharAttributes.put("Physical Hit Chance", ((charAttributes.get("Accuracy") * 4) + charInfo.get("Level")));
+		dependantCharAttributes.put("Instagib", 0.0);
 		/*
-		 * Determined by accuracy
+		 * Determined by Combat mastery.
+		 */
+		
+		
+		dependantCharAttributes.put("Physical Hit Chance", ((charAttributes.get("Agility") * 4) + charInfo.get("Level")));
+		/*
+		 * Determined by agility
 		 */
 		dependantCharAttributes.put("Magical Hit Chance", ((charAttributes.get("Concentration") * 4) + charInfo.get("Level")));
 		/*
 		 * 
 		 */
+		dependantCharAttributes.put("Ranged Hit Chance", ((charAttributes.get("Accuracy") * 4) + charInfo.get("Level")));
+		/*
+		 * 
+		 */
+		
+		//TODO: Add in attacks per turn
+		//TODO: add in moves per turn
+		//TODO: Initiative - The amount of turns per turn-cycle you get.
 		if(charClass.get("Main").equals("Fighter"))
 			dependantCharAttributes.put("Combat Mastery", (charAttributes.get("Strength") + charAttributes.get("Endurance") + charAttributes.get("Constitution")));
 		else if(charClass.get("Main").equals("Acolyte"))
@@ -319,6 +347,7 @@ public class Char
 		 * shot, you will get a bonus of the value of your combat mastery to be able to hit that. Refuse to put stats in your main, and your
 		 * combat will get rusty.
 		 */
+		dependantCharAttributes.put("Instagib",	((dependantCharAttributes.get("Combat Mastery") / 1000) + charInfo.get("Level")));
 	}
 	
 	private void generateBonusStats()
@@ -352,30 +381,30 @@ public class Char
 		
 		if(charClass.get("Main").equals("Fighter"))
 		{
-			 physicalStatChanceMin = 30.0;
-			 physicalStatChanceMax = 69.99;
+			 physicalStatChanceMin = 25.0;
+			 physicalStatChanceMax = 74.99;
 			 magicalStatChanceMin = 0.0;
-			 magicalStatChanceMax = 29.99;
-			 skillStatChanceMin = 70.0;
+			 magicalStatChanceMax = 24.99;
+			 skillStatChanceMin = 75.0;
 			 skillStatChanceMax = 100.0;
 		}
 		else if(charClass.get("Main").equals("Acolyte"))
 		{
 			 physicalStatChanceMin = 0.0;
-			 physicalStatChanceMax = 29.99;
-			 magicalStatChanceMin = 30.0;
-			 magicalStatChanceMax = 69.99;
-			 skillStatChanceMin = 70.0;
+			 physicalStatChanceMax = 24.99;
+			 magicalStatChanceMin = 25.0;
+			 magicalStatChanceMax = 74.99;
+			 skillStatChanceMin = 75.0;
 			 skillStatChanceMax = 100.0;
 		}
 		else if(charClass.get("Main").equals("Rogue"))
 		{
-			 physicalStatChanceMin = 70.0;
+			 physicalStatChanceMin = 75.0;
 			 physicalStatChanceMax = 100.0;
 			 magicalStatChanceMin = 0.0;
-			 magicalStatChanceMax = 29.99;
-			 skillStatChanceMin = 30.0;
-			 skillStatChanceMax = 69.99;
+			 magicalStatChanceMax = 24.99;
+			 skillStatChanceMin = 25.0;
+			 skillStatChanceMax = 74.99;
 		}
 		for(int i=1; i<charInfo.get("Attribute Points"); i++)
 		{
@@ -481,7 +510,6 @@ public class Char
 		}
 	}
 	
-
 	/**
 	 * Sets the limb status for each limb, including hands, feet, head and torso.
 	 * The value 8 means that it is normal. Goes up to ten and as low as 0.
@@ -497,26 +525,39 @@ public class Char
 		limbStatus.put("Torso", 8.0);
 		limbStatus.put("Back", 8.0);
 		limbStatus.put("Right Shoulder", 8.0);
-		limbStatus.put("Left Shoulder", 8.0);
 		limbStatus.put("Right Arm", 8.0);
-		limbStatus.put("Left Arm", 8.0);
 		limbStatus.put("Right Hand", 8.0);
+		limbStatus.put("Left Shoulder", 8.0);
+		limbStatus.put("Left Arm", 8.0);
 		limbStatus.put("Left Hand", 8.0);
+		limbStatus.put("Right Hip", 8.0);
 		limbStatus.put("Right Leg", 8.0);
+		limbStatus.put("Right Foot", 8.0);	
+		limbStatus.put("Left Hip", 8.0);	
 		limbStatus.put("Left Leg", 8.0);
-		limbStatus.put("Right Foot", 8.0);
 		limbStatus.put("Left Foot", 8.0);
 	}
 	
 	/**
-	 * Assign stats to a new character
+	 * Updates the status of a limb
+	 * @param key
+	 * @param value
 	 */
-	private void buildCharStatus()
+	private void setLimbStatus(String key, double value)
 	{
-		//TODO: Randomize stats, I guess.
+		limbStatus.put(key, value);
 	}
 	
-
+	/**
+	 * Gets the status of a limb.
+	 * @param key
+	 * @param value
+	 */
+	private void LimbStatus(String key)
+	{
+		limbStatus.get(key);
+	}
+	
 	/**
 	 * Assigns random perks.
 	 */
@@ -525,7 +566,6 @@ public class Char
 		//TODO: Determine randomized perks, set to array
 	}
 	
-
 	/**
 	 * Not sure what to put into here. 
 	 */
@@ -534,7 +574,6 @@ public class Char
 		//TODO: finish what the game info array should be, then default it in here. 
 	}
 	
-
 	/**
 	 * Creates a new save file and records all the random stuffs.
 	 */
@@ -544,7 +583,6 @@ public class Char
 	}
 	
 	//Level up stuffs
-
 	/**
 	 * Adds a new stat or updates a new one.
 	 * If you're trying to update a stat and spell the name of it wrong, 
@@ -561,7 +599,6 @@ public class Char
 			charAttributes.put(key, value);
 	}
 
-
 	/**
 	 * Print out all the stats of the character
 	 */
@@ -577,6 +614,7 @@ public class Char
 			space++;
 		}
 		
+		space = 0;
 		Set<String> dependantAttributeKeys = dependantCharAttributes.keySet();
 		for(String key: dependantAttributeKeys)
 		{
@@ -585,9 +623,19 @@ public class Char
 			System.out.println(key+": "+dependantCharAttributes.get(key));
 			space++;
 		}
+		
+		/*space = 0;
+		Set<String> limbKeys = limbStatus.keySet();
+		for(String key: limbKeys)
+		{
+			if(space%3 == 0)
+				System.out.print("\n");
+			System.out.println(key+": "+limbStatus.get(key));
+			System.out.println(limbStatusReport(key));
+			space++;
+		}*/
 	}
 	
-
 	/**
 	 * Load the save file attached to the 
 	 * @param charName
@@ -597,7 +645,6 @@ public class Char
 		//TODO: Load in the save file based on charName
 		//Use file reader or whatever, arrays are differentiated by ||, elements seperated by commas
 	}
-
 
 	/**
 	 * records the users input for a new character name.
@@ -610,7 +657,6 @@ public class Char
 		
 		return name;
 	}
-	
 	
 	/**
 	 * returns the numerical value of the requested character information.
@@ -626,7 +672,6 @@ public class Char
 			return -1;
 	}
 	
-	
 	/**
 	 * Sets or adds a new key and value into the charInfo HashMap
 	 * @param key
@@ -636,7 +681,6 @@ public class Char
 	{
 		charInfo.put(key, value);
 	}
-	
 	
 	public double randomizer(double max)
 	{
