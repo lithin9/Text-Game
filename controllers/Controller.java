@@ -31,6 +31,6 @@ public class Controller
 		//character.levelSystemExample(100);
 		character.newCharacter();
 		//model.Intro.testIntro();
-		//character.printStats();
+		character.printStats();
 	}
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.text.DecimalFormat;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -8,8 +9,8 @@ import java.util.Set;
 public class Char 
 {
 	String name = new String();//retrieveStats("name");
-	String charClass = new String();//retrieveStats("class");
 	
+	LinkedHashMap<String, String> charClass = new LinkedHashMap<String, String>();
 	LinkedHashMap<String, Integer> charInfo = new LinkedHashMap<String, Integer>();
 	LinkedHashMap<String, Double> charAttributes = new LinkedHashMap<String, Double>();//Previously Stats
 	LinkedHashMap<String, Double> dependantCharAttributes = new LinkedHashMap<String, Double>();
@@ -37,18 +38,19 @@ public class Char
 		System.out.println("Please choose a class:\n1.Fighter\n2.Rogue\n3.Acolyte");
 		switch (input.nextLine()) {
 		case "1": 
-			charClass = "Fighter";
+			charClass.put("Main", "Fighter");
 		break;
 		case "2":
-			charClass = "Rogue";
+			charClass.put("Main", "Rogue");
 		break;
 		case "3": 
-			charClass = "Acolyte";
+			charClass.put("Main", "Acolyte");
 		break;
 		}
 		buildCharInfo();
-		buildBaseStats();
 		generateBonusStats();
+		buildBaseStats();
+		generateRandomStats();
 		buildDependantStats();
 		buildLimbStatus();
 		buildCharStatus();
@@ -67,8 +69,8 @@ public class Char
 	{
 		charInfo.put("Experience", 0);
 		charInfo.put("Level", 1);
-		charInfo.put("SkillPoints", 3);
-		charInfo.put("AttributePoints", 50);
+		charInfo.put("Skill Points", 3);
+		charInfo.put("Attribute Points", 50);
 		charInfo.put("Morality", 0);
 	}
 
@@ -90,42 +92,42 @@ public class Char
 		 *Main stats gain 2 points per level, Secondary stats gain 1 points per level, Ternary stats gain 0.5 points per level
 		 *Everything else gains 0.1 points per level. This isn't a lot, but it'll add up and help characters with little wisdom keep balanced.
 		 */
-		charAttributes.put("Strength", 5.0);
+		charAttributes.put("Strength", 1.0);
 		/*//Warrior Main Stat, Berserker Secondary Stat, Assassin Ternary Stat
 		 *This divided by level, then divided by 2 will determine the amount of attack power per level gained
 		 */
-		charAttributes.put("Endurance", 5.0);
+		charAttributes.put("Endurance", 1.0);
 		/*Berserker Main Stat, Templar Secondary Stat, Druid Ternary Stat
 		 * Endurance divided by level, then divided by ten will be the amount of armor class per level added.
 		 * Every point of endurance gained will add 4 stamina
 		 * Endurance divided by level is the critical resistance
 		 */
-		charAttributes.put("Constitution", 5.0);
+		charAttributes.put("Constitution", 1.0);
 		/*Templar Main Stat, Warrior Secondary Stat, Warlock Ternary Stat
 		 *Every point of constitution will add 4 health.
 		 *Constitution divided by level is the block chance
 		 */
 		  //Mental Status\\
-		charAttributes.put("Intellect", 5.0);
+		charAttributes.put("Intellect", 1.0);
 		/*Wizard Main Stat, Druid Secondary Stat, Shadow Ternary Stat
 		 *This is going to be a bitch for most people: Intellect divided by level is how fast you gain exp.
 		 *Say you have 5 int and level 2, you'll get 2.5 times the amount of exp. So Wizards, though incredibly 
 		 *weak will make up for it by growing stronger, faster. Intellect also determines magic power 
 		 */
-		charAttributes.put("Perception", 5.0);
+		charAttributes.put("Perception", 1.0);
 		/*Warlock Main Stat, Wizard Secondary Stat, Ranger Ternary Stat
 		 *Perception plus level is the percent chance to notice things when first entering a coordinate (x,y) 
 		 *I'm not sure if I should allow going back and forth to continue searching, I think it won't matter.
 		 *Not everything will have secrets. Plus who is going to want to type go south, go north a hundred times for chance of maybe finding something?
 		 */
-		charAttributes.put("Wisdom", 5.0);
+		charAttributes.put("Wisdom", 1.0);
 		/*Druid Main Stat, Warlock Secondary Stat, Templar Ternary Stat
 		 *Wisdom divided by level, plus 3 will be the amount of stat points available to spend per levelup. 
 		 *The plus three ensures that no one will get stuck, never being able to raise their wisdom.
 		 *Wisdom is also Magical Resistence, Wisdom divided by level, then divided by ten will be the amount of magical resistence per level added.
 		 *Ability/Skill Status
 		 */
-		charAttributes.put("Agility", 5.0);
+		charAttributes.put("Agility", 1.0);
 		/* Assassin Main Stat, Shadow Secondary Stat, Berserker Ternary Stat
 		 * Agility determines the amount of attacks per turn and dodge chance and moves per turn
 		 * Dodge chance equals agility divided by level
@@ -148,12 +150,13 @@ public class Char
 		 * Very simple shit. if obstacle is in the way then try to go around, idk lol
 		 * Obstacles will block view. If an enemy can't see you, he will go where he last saw you, otherwise wander aimlessly. Same with stealth.
 		 */
-		charAttributes.put("Accuracy", 5.0);
+		charAttributes.put("Accuracy", 1.0);
 		/* Ranger Main Stat, Assassin Secondary Stat, Warrior Ternary Stat 
-		 * Determines hit chance
+		 * Determines hit chance. Level plus (accuracy )
+		 * Determines crit chance. Accuracy divided by 3.
 		 * TODO:Finish formula
 		 */
-		charAttributes.put("Concentration", 5.0);//Shadow Main Stat, Ranger Secondary Stat, Wizard Ternary Stat
+		charAttributes.put("Concentration", 1.0);//Shadow Main Stat, Ranger Secondary Stat, Wizard Ternary Stat
 		/*
 		 * Determines magical hit chance
 		 */
@@ -228,14 +231,14 @@ public class Char
 	private void buildDependantStats()
 	{
 		//Main stats gain 5 points per level, Secondary stats gain 2.5 points per level, Ternary stats gain 1.25 points per level
-		dependantCharAttributes.put("Health", 10.0);			//Fighter Main Stat, Rogue Secondary Stat, Acolyte Ternary Stat
+		dependantCharAttributes.put("Health", (charAttributes.get("Constitution") * 4.0));			//Fighter Main Stat, Rogue Secondary Stat, Acolyte Ternary Stat
 		
 		//Self explainatory
-		dependantCharAttributes.put("Stamina", 20.0);
+		dependantCharAttributes.put("Stamina", (charAttributes.get("Endurance") * 4.0));
 		/*Rogue Main Stat, Fighter Secondary Stat, Acolyte Ternary Stat
 		 *Determines the amount of melee abilities that can be used per fight
 		 */
-		dependantCharAttributes.put("Magicka", 15.0);
+		dependantCharAttributes.put("Magicka", (charAttributes.get("Wisdom") * 4.0));
 		/*Acolyte Main Stat, Rogue Ternary Stat, Fighter Ternary Stat
 		 *Determines the amount of magical abilities that can be used in a fight
 		 */
@@ -246,7 +249,7 @@ public class Char
 		dependantCharAttributes.put("Stamina Regen", ((charAttributes.get("Agility") + charAttributes.get("Concentration"))/ 10));	//(Agility+Concentration)/10
 		
 		//Defensive Status
-		dependantCharAttributes.put("Armor Class", 0.0);
+		dependantCharAttributes.put("Armor Class", ((charAttributes.get("Endurance") / charInfo.get("Level")) / 10));
 		/*
 		 * Armor Class determines physical damage reduction: (Armor Class + (yourLevel - enemyLevel)) / yourLevel(or their level)) = Percent of damage to take away from
 		 * Example: You have 23 armor class, you're level 10 and the enemy is level 12. (23+(10-12))/10 = 2.1
@@ -256,15 +259,16 @@ public class Char
 		 *
 		 */
 
-		dependantCharAttributes.put("Resiliance", 5.0);//Used to be critical resistance
+		dependantCharAttributes.put("Resiliance", ((charAttributes.get("Endurance") / 3) + charInfo.get("Level")));//Used to be critical resistance
 		/*
 		 *
 		 */
-		dependantCharAttributes.put("Dodge", 5.0);
+		dependantCharAttributes.put("Dodge", (charAttributes.get("Constitution") + charInfo.get("Level")));
 		/*
-		 *Percent chance that the character can dodge an attack.
+		 * Percent chance that the character can dodge an attack.
+		 * Note that the enemies agility will negate your dodge chance.
 		 */
-		dependantCharAttributes.put("Block", 5.0);
+		dependantCharAttributes.put("Block", (charAttributes.get("Constitution") + charInfo.get("Level")));
 		/*
 		 *
 		 */
@@ -272,34 +276,41 @@ public class Char
 		/*
 		 * Poison Resistance is the effectiveness of poisons against you
 		 * Calculated by if (level of posion - poison resistance) is less than 1, in which case the poison won't do anything,
-		 * but for every point about 1 it will do 2 points of damage
+		 * but for every point above 1 it will do 2 points of damage
 		 */
 		
 		//Offensive Status
-		dependantCharAttributes.put("Attack Power", 2.5);
+		dependantCharAttributes.put("Attack Power", ((charAttributes.get("Endurance") * 1.33) + charInfo.get("Level")));
 		/*
 		 * Determined by (Strength/Level)/2
 		 * This will be how much damage is done by the character.
 		 */
-		dependantCharAttributes.put("Magic Power", 2.5);
+		dependantCharAttributes.put("Magic Power", ((charAttributes.get("Intellect") * 1.33) + charInfo.get("Level")));
 		/*
 		 * Determined by (Intelligence/Level)/2
 		 * This will be how much spell damage is done by the character.
 		 * Spells will have formulas that incorporate this. Includes healing power.
 		 */
-		dependantCharAttributes.put("Critical Chance", 10.0);
+		dependantCharAttributes.put("Critical Chance", ((charAttributes.get("Accuracy") / 3) + charInfo.get("Level")));
 		/*
-		 * Determined by.. not sure yet, agility is already OP as fuck.
+		 * Determined by accuracy.
 		 */
-		dependantCharAttributes.put("Physical Hit Chance", 60.0);
+		dependantCharAttributes.put("Physical Hit Chance", ((charAttributes.get("Accuracy") * 4) + charInfo.get("Level")));
 		/*
-		 *
+		 * Determined by accuracy
 		 */
-		dependantCharAttributes.put("Magical Hit Chance", 60.0);
+		dependantCharAttributes.put("Magical Hit Chance", ((charAttributes.get("Concentration") * 4) + charInfo.get("Level")));
 		/*
-		 *
+		 * 
 		 */
-		dependantCharAttributes.put("Combat Mastery", 15.0);
+		if(charClass.get("Main").equals("Fighter"))
+			dependantCharAttributes.put("Combat Mastery", (charAttributes.get("Strength") + charAttributes.get("Endurance") + charAttributes.get("Constitution")));
+		else if(charClass.get("Main").equals("Acolyte"))
+			dependantCharAttributes.put("Combat Mastery", (charAttributes.get("Intellect") + charAttributes.get("Perception") + charAttributes.get("Wisdom")));
+		else if(charClass.get("Main").equals("Rogue"))
+			dependantCharAttributes.put("Combat Mastery", (charAttributes.get("Agility") + charAttributes.get("Accuracy") + charAttributes.get("Concentration")));
+		else
+			dependantCharAttributes.put("Combat Mastery", 0.0);
 		/*
 		 * Combat mastery is determined by adding all three stats of the chosen class' stat group: physical, mental, ability/skill 
 		 * and dividing it by the current level. Dividing by level ensures a scale, but because your combat mastery has decreased, 
@@ -311,6 +322,99 @@ public class Char
 	}
 	
 	private void generateBonusStats()
+	{
+		double gainStatAt = 0.0;
+		while(true)
+		{
+			double random = randomizer(100.0);
+			if(random > gainStatAt || random == 0)
+			{
+				if(random == 100.0)//0 means exactly 100.
+					charInfo.put("Attribute Points", (charInfo.get("Attribute Points") + 1));//Give a bonus stat for scoring so well.
+				charInfo.put("Attribute Points", (charInfo.get("Attribute Points") + 1));
+				gainStatAt += 20.0;
+				if(gainStatAt > 90.0)
+					gainStatAt = 90.0;
+			}
+			else
+				break;
+		}
+	}
+
+	private void generateRandomStats()
+	{
+		double physicalStatChanceMin = 0.0;
+		double physicalStatChanceMax = 0.0;
+		double magicalStatChanceMin = 0.0;
+		double magicalStatChanceMax = 0.0;
+		double skillStatChanceMin = 0.0;
+		double skillStatChanceMax = 0.0;
+		
+		if(charClass.get("Main").equals("Fighter"))
+		{
+			 physicalStatChanceMin = 30.0;
+			 physicalStatChanceMax = 69.99;
+			 magicalStatChanceMin = 0.0;
+			 magicalStatChanceMax = 29.99;
+			 skillStatChanceMin = 70.0;
+			 skillStatChanceMax = 100.0;
+		}
+		else if(charClass.get("Main").equals("Acolyte"))
+		{
+			 physicalStatChanceMin = 0.0;
+			 physicalStatChanceMax = 29.99;
+			 magicalStatChanceMin = 30.0;
+			 magicalStatChanceMax = 69.99;
+			 skillStatChanceMin = 70.0;
+			 skillStatChanceMax = 100.0;
+		}
+		else if(charClass.get("Main").equals("Rogue"))
+		{
+			 physicalStatChanceMin = 70.0;
+			 physicalStatChanceMax = 100.0;
+			 magicalStatChanceMin = 0.0;
+			 magicalStatChanceMax = 29.99;
+			 skillStatChanceMin = 30.0;
+			 skillStatChanceMax = 69.99;
+		}
+		for(int i=1; i<charInfo.get("Attribute Points"); i++)
+		{
+			double random = randomizer(100);
+			double randomStat = randomizer(3);
+			if(magicalStatChanceMin <= random && magicalStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					charAttributes.put("Intellect", (charAttributes.get("Intellect") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					charAttributes.put("Perception", (charAttributes.get("Perception") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					charAttributes.put("Wisdom", (charAttributes.get("Wisdom") + 1));
+			}
+			else if(physicalStatChanceMin <= random && physicalStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					charAttributes.put("Strength", (charAttributes.get("Strength") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					charAttributes.put("Endurance", (charAttributes.get("Endurance") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					charAttributes.put("Constitution", (charAttributes.get("Constitution") + 1));
+			}
+			else if(skillStatChanceMin <= random && skillStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					charAttributes.put("Agility", (charAttributes.get("Agility") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					charAttributes.put("Accuracy", (charAttributes.get("Accuracy") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					charAttributes.put("Concentration", (charAttributes.get("Concentration") + 1));
+			}
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	private void generateBonusStats_old()
 	{
 		int gainStatAt = 40;
 		int additionalStatCount = 0;
@@ -377,6 +481,7 @@ public class Char
 		}
 	}
 	
+
 	/**
 	 * Sets the limb status for each limb, including hands, feet, head and torso.
 	 * The value 8 means that it is normal. Goes up to ten and as low as 0.
@@ -411,6 +516,7 @@ public class Char
 		//TODO: Randomize stats, I guess.
 	}
 	
+
 	/**
 	 * Assigns random perks.
 	 */
@@ -419,6 +525,7 @@ public class Char
 		//TODO: Determine randomized perks, set to array
 	}
 	
+
 	/**
 	 * Not sure what to put into here. 
 	 */
@@ -427,6 +534,7 @@ public class Char
 		//TODO: finish what the game info array should be, then default it in here. 
 	}
 	
+
 	/**
 	 * Creates a new save file and records all the random stuffs.
 	 */
@@ -436,6 +544,7 @@ public class Char
 	}
 	
 	//Level up stuffs
+
 	/**
 	 * Adds a new stat or updates a new one.
 	 * If you're trying to update a stat and spell the name of it wrong, 
@@ -452,6 +561,7 @@ public class Char
 			charAttributes.put(key, value);
 	}
 
+
 	/**
 	 * Print out all the stats of the character
 	 */
@@ -466,8 +576,18 @@ public class Char
 			System.out.println(key+": "+charAttributes.get(key));
 			space++;
 		}
+		
+		Set<String> dependantAttributeKeys = dependantCharAttributes.keySet();
+		for(String key: dependantAttributeKeys)
+		{
+			if(space%3 == 0)
+				System.out.print("\n");
+			System.out.println(key+": "+dependantCharAttributes.get(key));
+			space++;
+		}
 	}
 	
+
 	/**
 	 * Load the save file attached to the 
 	 * @param charName
@@ -477,6 +597,7 @@ public class Char
 		//TODO: Load in the save file based on charName
 		//Use file reader or whatever, arrays are differentiated by ||, elements seperated by commas
 	}
+
 
 	/**
 	 * records the users input for a new character name.
@@ -489,6 +610,7 @@ public class Char
 		
 		return name;
 	}
+	
 	
 	/**
 	 * returns the numerical value of the requested character information.
@@ -504,6 +626,7 @@ public class Char
 			return -1;
 	}
 	
+	
 	/**
 	 * Sets or adds a new key and value into the charInfo HashMap
 	 * @param key
@@ -514,29 +637,33 @@ public class Char
 		charInfo.put(key, value);
 	}
 	
+	
 	public double randomizer(double max)
 	{
 		double random = Math.random();
+		DecimalFormat df = new DecimalFormat("#.##");
 		
-		return max*random;
+		return Double.valueOf(df.format(max*random));
 	}
 	
 	public double randomizer(double max, double modifier)
 	{
 		double random = Math.random();
-		
-		return (max*random)+modifier;
+
+		DecimalFormat df = new DecimalFormat("#.##");
+		return Double.valueOf(df.format((max*random)+modifier));
 	}
 	
 	public double[] randomizer(double max, int rolls)
 	{
 		double random;
 		
+		DecimalFormat df = new DecimalFormat("#.##");
 		double[] results = new double[rolls];
 		for(int i=0; i<rolls; i++)
 		{
 			random = Math.random();
-			results[i] = max*random;
+			results[i] = Double.valueOf(df.format(max*random));
 		}
 		return results;
 	}
@@ -549,7 +676,9 @@ public class Char
 		for(int i=0; i<rolls; i++)
 		{
 			random = Math.random();
-			results[i] = (max*random)+modifier;
+
+			DecimalFormat df = new DecimalFormat("#.##");
+			results[i] = Double.valueOf(df.format((max*random)+modifier));
 		}
 		return results;
 	}
