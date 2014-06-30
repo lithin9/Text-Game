@@ -67,7 +67,7 @@ package view;
       * @return a line with newlines inserted, <code>null</code> if null input
      */
      public static String  wrap(String str, int wrapLength) {
-         return wrap(str, wrapLength, null, false);
+         return wrap(str, wrapLength, null, true);
     }
      
      /**
@@ -120,7 +120,7 @@ package view;
             	 if (wrapLongWords) {
                      // wrap really long word one line at a time
             		 wrappedLine.append(str.substring(offset, wrapLength + offset));
-                     wrappedLine.append(newLineStr);
+                     wrappedLine.append(newLineStr+"-");
                      offset += wrapLength;
                  } else {
                      // do not wrap really long word, just extend beyond limit
