@@ -39,7 +39,6 @@ public class Char
 	public void newCharacter()
 	{
 		//Get name 
-		Scanner input = new Scanner(System.in);
 		output.out.println("Please enter a name: \n");
 		name = input.nextLine();
 		
@@ -62,18 +61,38 @@ public class Char
 		}
 		character.put("Classes", charClass);
 		
+		generateCharacter: while(true)
+		{
+			buildCharInfo();
+			generateBonusStats();
+			buildBaseStats();
+			generateRandomStats();
+			buildDependantStats();
+			output.out.println("Below are the generated stats:\n");
+			printStats();
+			output.out.println("Re-roll? Y/N");
+			questionLoop: while(true)
+			{
+				if(input.nextLine().equalsIgnoreCase("n"))
+				{
+					break generateCharacter;
+				}
+				else if(input.nextLine().equalsIgnoreCase("y"))
+					continue generateCharacter;
+				else
+				{
+					output.out.println("That is unacceptable");
+					continue questionLoop;
+				}
+			}
+						
+		}
 		
-		buildCharInfo();
-		generateBonusStats();
-		buildBaseStats();
-		generateRandomStats();
-		buildDependantStats();
 		buildLimbStatus();
 		buildCharPerks();
 		buildGameInfo();
 		
 		save();
-		input.close();
 	}
 
 	public void save()
@@ -113,9 +132,6 @@ public class Char
 		character.put("Character Information", value);
 		
 		value = null;
-		
-		
-		
 	}
 
 	/**
@@ -209,7 +225,7 @@ public class Char
 		
 		
 		//Offensive Status
-		value.put("Melee Attack Power", ((character.get("Character Attributes").get("Endurance") * 1.33) + character.get("Character Information").get("Level")));
+		value.put("Melee Attack Power", ((character.get("Character Attributes").get("Strength") * 1.33) + character.get("Character Information").get("Level")));
 		/*
 		 * Determined by (Strength/Level)/2
 		 * This will be how much damage is done by the character.
@@ -270,13 +286,18 @@ public class Char
 		 * combat will get rusty.
 		 */
 		
-	      if(character.get("Classes").get("Main Class") == 1.0)
-	          value.put("Instagib", (character.get("Character Attributes").get("Strength") + character.get("Character Attributes").get("Endurance") + character.get("Character Attributes").get("Constitution")));
-	      else if(character.get("Classes").get("Main Class") == 2.0)
-	          value.put("Instagib", (character.get("Character Attributes").get("Intellect") + character.get("Character Attributes").get("Perception") + character.get("Character Attributes").get("Wisdom")));
-          else if(character.get("Classes").get("Main Class") == 3.0)
-	          value.put("Instagib", (character.get("Character Attributes").get("Agility") + character.get("Character Attributes").get("Accuracy") + character.get("Character Attributes").get("Concentration")));
+		if(character.get("Classes").get("Main Class") == 1.0)
+			value.put("Instagib", ((character.get("Character Attributes").get("Strength") + character.get("Character Attributes").get("Endurance") + character.get("Character Attributes").get("Constitution") + character.get("Character Attributes").get("Intellect") + character.get("Character Attributes").get("Perception") + character.get("Character Attributes").get("Wisdom") + character.get("Character Attributes").get("Agility") + character.get("Character Attributes").get("Accuracy") + character.get("Character Attributes").get("Concentration")) / 1000));
 		
+		/*
+		if(character.get("Classes").get("Main Class") == 1.0)
+			value.put("Instagib", (character.get("Character Attributes").get("Strength") + character.get("Character Attributes").get("Endurance") + character.get("Character Attributes").get("Constitution")));
+		else if(character.get("Classes").get("Main Class") == 2.0)
+			value.put("Instagib", (character.get("Character Attributes").get("Intellect") + character.get("Character Attributes").get("Perception") + character.get("Character Attributes").get("Wisdom")));
+		else if(character.get("Classes").get("Main Class") == 3.0)
+			value.put("Instagib", (character.get("Character Attributes").get("Agility") + character.get("Character Attributes").get("Accuracy") + character.get("Character Attributes").get("Concentration")));
+		*/
+	      
 		character.put("Character Dependant Attributes", value);
 		
 		value = null;
@@ -285,14 +306,15 @@ public class Char
 	private void generateBonusStats()
 	{
 		double gainStatAt = 0.0;
+		double amount = 0.0;
 		while(true)
 		{
 			double random = Randomizer.randomizer(100.0);
 			if(random > gainStatAt || random == 0)
 			{
 				if(random == 100.0)//0 means exactly 100.
-					character.get("Character Information").put("Attribute Points", (character.get("Character Information").get("Attribute Points") + 1));//Give a bonus stat for scoring so well.
-				character.get("Character Information").put("Attribute Points", (character.get("Character Information").get("Attribute Points") + 1));
+					amount++;//Give a bonus stat for scoring so well.
+				amount++;
 				gainStatAt += 20.0;
 				if(gainStatAt > 90.0)
 					gainStatAt = 90.0;
@@ -300,6 +322,8 @@ public class Char
 			else
 				break;
 		}
+		character.get("Character Information").put("Attribute Points", (character.get("Character Information").get("Attribute Points") + amount));
+		output.out.println("Your character has "+amount+" bonus attribute points");
 	}
 
 	private void generateRandomStats()
@@ -339,7 +363,83 @@ public class Char
 			 skillStatChanceMin = 25.0;
 			 skillStatChanceMax = 74.99;
 		}
-		for(int i=1; i<points; i++)
+		for(int i=0; i<points; i++)
+		{
+			double random = Randomizer.randomizer(100);
+			double randomStat = Randomizer.randomizer(3);
+			if(magicalStatChanceMin <= random && magicalStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					character.get("Character Attributes").put("Intellect", (character.get("Character Attributes").get("Intellect") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					character.get("Character Attributes").put("Perception", (character.get("Character Attributes").get("Perception") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					character.get("Character Attributes").put("Wisdom", (character.get("Character Attributes").get("Wisdom") + 1));
+			}
+			else if(physicalStatChanceMin <= random && physicalStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					character.get("Character Attributes").put("Strength", (character.get("Character Attributes").get("Strength") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					character.get("Character Attributes").put("Endurance", (character.get("Character Attributes").get("Endurance") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					character.get("Character Attributes").put("Constitution", (character.get("Character Attributes").get("Constitution") + 1));
+			}
+			else if(skillStatChanceMin <= random && skillStatChanceMax >= random)
+			{
+				if(randomStat >= 0.0 && randomStat <= 0.99)
+					character.get("Character Attributes").put("Agility", (character.get("Character Attributes").get("Agility") + 1));
+				else if(randomStat >= 1.0 && randomStat <= 1.99)
+					character.get("Character Attributes").put("Accuracy", (character.get("Character Attributes").get("Accuracy") + 1));
+				else if(randomStat >= 2.0 && randomStat <= 3.0)
+					character.get("Character Attributes").put("Concentration", (character.get("Character Attributes").get("Concentration") + 1));
+			}
+			
+			character.get("Character Information").put("Attribute Points", (character.get("Character Information").get("Attribute Points") - 1));
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	private void generateRandomStats_old()
+	{
+		double physicalStatChanceMin = 0.0;
+		double physicalStatChanceMax = 0.0;
+		double magicalStatChanceMin = 0.0;
+		double magicalStatChanceMax = 0.0;
+		double skillStatChanceMin = 0.0;
+		double skillStatChanceMax = 0.0;
+		double points = character.get("Character Information").get("Attribute Points");
+		
+		if(character.get("Classes").get("Main Class") == 1.0) //Fighter
+		{
+			 physicalStatChanceMin = 25.0;
+			 physicalStatChanceMax = 74.99;
+			 magicalStatChanceMin = 0.0;
+			 magicalStatChanceMax = 24.99;
+			 skillStatChanceMin = 75.0;
+			 skillStatChanceMax = 100.0;
+		}
+		else if(character.get("Classes").get("Main Class") == 2.0)//Acolyte
+		{
+			 physicalStatChanceMin = 0.0;
+			 physicalStatChanceMax = 24.99;
+			 magicalStatChanceMin = 25.0;
+			 magicalStatChanceMax = 74.99;
+			 skillStatChanceMin = 75.0;
+			 skillStatChanceMax = 100.0;
+		}
+		else if(character.get("Classes").get("Main Class") == 3.0)//Rogue
+		{
+			 physicalStatChanceMin = 75.0;
+			 physicalStatChanceMax = 100.0;
+			 magicalStatChanceMin = 0.0;
+			 magicalStatChanceMax = 24.99;
+			 skillStatChanceMin = 25.0;
+			 skillStatChanceMax = 74.99;
+		}
+		for(int i=0; i<points; i++)
 		{
 			double random = Randomizer.randomizer(100);
 			double randomStat = Randomizer.randomizer(3);

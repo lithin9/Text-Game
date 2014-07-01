@@ -10,8 +10,8 @@ import java.util.LinkedHashMap;
 /** JDK 7+. */
 public class Save
 {
-	static String OUTPUT_FILE_NAME = "C:\\Users\\Robert Van Loon\\Dropbox\\Lithin\\workspace\\Text-Game\\files\\";
-	static String RESET = "C:\\Users\\Robert Van Loon\\Dropbox\\Lithin\\workspace\\Text-Game\\files\\";
+	static String OUTPUT_FILE_NAME = System.getProperty("user.dir")+"\\files";
+	static String RESET = System.getProperty("user.dir")+"\\files";
 	
 	static view.Out output = new view.Out();
 	static view.In input = new view.In();
@@ -21,11 +21,24 @@ public class Save
 		
 		try{
 			//Set the name of the file to the characters name
-			OUTPUT_FILE_NAME = RESET +  "characters\\"+fileName+".txt";
-			//Check to see if file exists
+			OUTPUT_FILE_NAME = RESET +  "\\savegames\\"+fileName;
+
 			File binFile = new File(OUTPUT_FILE_NAME);
-			if(!binFile.exists())
-				binFile.createNewFile();
+			File directoryFile = new File(RESET + "\\savegames\\");
+			
+			
+			try{
+				if(!binFile.exists())
+					binFile.createNewFile();
+			}catch(IOException io){
+				output.out.println(directoryFile.mkdirs());
+				try{
+					if(!binFile.exists())
+						binFile.createNewFile();
+				}catch(IOException e){
+					throw e;
+				}
+			}
 			
 			FileOutputStream fileOut = new FileOutputStream(OUTPUT_FILE_NAME);
 			

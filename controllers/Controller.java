@@ -11,21 +11,27 @@ public class Controller
 	public static void main(String[] args)
 	{
 		model.Char character = new model.Char();
-		output.out.println("Please select an option!\n\n1. Load Game.\n2. New Game\n3. Help.");
-		switch(input.getNextLine()){
-		case "1":
-			System.out.println("Please enter the name of the character you wish to load.");
-			character.load(input.getNextLine());
-			character.printStats();
-			break;
-		case "2":
-			System.out.println("Creating new character!");
-			character.newCharacter();
-			
-			break;
-		case "3":
-			System.out.println("This feature has not yet been implemented.");
-			break;
+		startMenu: while(true)
+		{
+			output.out.println("Please select an option!\n\n1. Load Game.\n2. New Game\n3. Help.");
+			optionMenu: switch(input.nextLine()){
+			case "1":
+				output.out.println("Please enter the name of the character you wish to load.");
+				character.load(input.nextLine());
+				character.printStats();
+				break optionMenu;
+			case "2":
+				output.out.println("Creating new character!");
+				character.newCharacter();
+				
+				break optionMenu;
+			case "3":
+				output.out.println("This feature has not yet been implemented.");
+				break optionMenu;
+			case "4":
+				output.out.println("Good byte");
+				break startMenu;
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package view;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 
@@ -14,11 +15,16 @@ public class In
 		in = new Scanner(System.in);
 	}
 	
-	public String getNextLine()
+	public String nextLine()
 	{
 		in.reset();
 		//Collect users input
-		String input = in.nextLine();
+		String input = "";
+		try{
+		input = in.nextLine();
+		} catch(NoSuchElementException e){
+			System.out.println("Wait here");
+		}
 		//Return user input
 		return input;
 	}

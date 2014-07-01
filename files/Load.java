@@ -19,17 +19,18 @@ public final class Load
 {
 
 	/** Change these settings before running this class. */
-	private static String INPUT_FILE_NAME = "C:\\Users\\Robert Van Loon\\Dropbox\\Lithin\\workspace\\Text-Game\\files\\";
-	private static String RESET = "C:\\Users\\Robert Van Loon\\Dropbox\\Lithin\\workspace\\Text-Game\\files\\";
+	private static String INPUT_FILE_NAME = System.getProperty("user.dir")+"\\files";
+	private static String RESET = System.getProperty("user.dir")+"\\files";
 
 	static view.Out output = new view.Out();
 	static view.In input = new view.In();
 	
 
+   @SuppressWarnings("unchecked")
    public static void loadCharacter(String name)
    {
 	   
-      INPUT_FILE_NAME = RESET + "\\characters\\"+name+".txt";
+      INPUT_FILE_NAME = RESET + "\\savegames\\"+name;
       try
       {
          FileInputStream fileIn = new FileInputStream(INPUT_FILE_NAME);
@@ -43,7 +44,7 @@ public final class Load
          return;
       }catch(ClassNotFoundException c)
       {
-         output.out.println("Employee class not found");
+         output.out.println("HashMap<String, LinkedHashMap<String, Double>> class not found");
          c.printStackTrace();
          return;
       }
