@@ -1,7 +1,7 @@
-package characters.species;
+package characters.attributes;
 
 //TODO: 
-interface speciesInterface {
+interface attributesInterface {
 	static String info = "";
 	
 	public String getInfo();
