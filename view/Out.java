@@ -22,16 +22,6 @@ public class Out
 					(WordUtils.wrap(x, 75))
 				);
 			}
-			public void printlnColor(String x, String color)
-			{
-				if(color.equals("red"))
-					color = "\\u001B31;1m";
-				super.println(
-						color
-						+(WordUtils.wrap(x, 75))
-						);
-			}
-			
 		};
 		
 		err = new PrintStream(System.err)

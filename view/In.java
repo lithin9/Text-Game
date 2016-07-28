@@ -21,7 +21,7 @@ public class In
 		//Collect users input
 		String input = "";
 		try{
-		input = in.nextLine();
+			input = in.nextLine();
 		} catch(NoSuchElementException e){
 			System.out.println("Wait here");
 		}

@@ -18,25 +18,12 @@ public class Char
 	static view.In input = new view.In();
 	
 	public static HashMap<String, LinkedHashMap<String, Double>> character = new HashMap<String, LinkedHashMap<String, Double>>();
-	
-	//LinkedHashMap<String, String> charClass = new LinkedHashMap<String, String>();
-	//LinkedHashMap<String, Double> charInfo = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> charAttributes = new LinkedHashMap<String, Double>();//Previously Stats
-	//LinkedHashMap<String, Double> dependantCharAttributes = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> skillAttributes = new LinkedHashMap<String, Double>();
-	//HashMap<String, LinkedHashMap<String, Double>> limbInformation = new HashMap<String, LinkedHashMap<String, Double>>();
-	//LinkedHashMap<String, Double> charStatus = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> charPerks = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> gameInfo = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> hardCoreInfo = new LinkedHashMap<String, Double>();
-	//LinkedHashMap<String, Double> playerInfluence = new LinkedHashMap<String, Double>();
 
 	
-	//TODO: lookup hash mapping.
 	/**
 	 * Runs all the functions that set up the save file for a new game.
 	 */
-	public void newCharacter()
+	public void newPlayerCharacter()
 	{
 		//Get name 
 		output.out.println("Please enter a name: \n");
@@ -95,6 +82,10 @@ public class Char
 		save();
 	}
 
+	public void newNonPlayerCharacter() {
+		
+	}
+	
 	public void save()
 	{
 		try {
@@ -141,7 +132,6 @@ public class Char
 	{
 		LinkedHashMap<String, Double> value = new LinkedHashMap<String, Double>();
 		
-		
 		value.put("Strength", 1.0);
 		value.put("Endurance", 1.0);
 		value.put("Constitution", 1.0);
@@ -154,11 +144,9 @@ public class Char
 		value.put("Accuracy", 1.0);
 		value.put("Concentration", 1.0);
 		
-		
 		character.put("Character Attributes", value);
 		
 		value = null;
-		
 	}
 	
 	/**This will generate the stats that are dependant on 
