@@ -1,9 +1,7 @@
-package controllers;
-
 import view.*;
 
 //An entry point class to handle multiple types of application modes
-public class Controller
+public class StartMenu
 {
 	static view.Out output = new view.Out();
 	static view.In input = new view.In();
@@ -11,7 +9,6 @@ public class Controller
 	
 	public static void main(String[] args)
 	{
-		System.out.println("hello world");
 		startMenu: while(true)
 		{
 			output.out.println("Please select an option!\n\n1. Load Game.\n2. New Game\n3. Help.");
