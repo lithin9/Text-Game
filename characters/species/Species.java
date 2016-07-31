@@ -9,8 +9,6 @@ public class Species {
 	static view.In input = new view.In();
 	//TODO: call each attribute and set a min + max
 	//TODO: set bonuses to each attribute
-	//TODO: set weight min max
-	//TODO: set height min max
 	//TODO: Think of other species based shit
 	protected LinkedHashMap<String, characters.species.speciesInterface> speciesObjList = new LinkedHashMap<String, characters.species.speciesInterface>();
 	public characters.species.speciesInterface selectedSpecies;
@@ -23,7 +21,7 @@ public class Species {
 	
 	public void selectNewSpecies() {
 		Boolean SpeciesNotSelected = true;
-		characters.species.speciesInterface selectedChoice = new characters.species.Human();;
+		characters.species.speciesInterface selectedChoice = null;
 		LinkedHashMap<Integer, String> keyChoices = new LinkedHashMap<Integer, String>();
 		speciesSelect: while(SpeciesNotSelected) {
 			//Output for each species
@@ -32,7 +30,7 @@ public class Species {
 			
 			for(String key: detailKeys)
 			{
-				if(speciesObjList.get(key).playable) {
+				if(speciesObjList.get(key).getIsPlayable()) {
 					if(space % 3 == 0)
 						output.out.println("\n");
 					output.out.println(++space + ". " + key + ": " + speciesObjList.get(key).getInfo());
@@ -50,7 +48,6 @@ public class Species {
 					//if confirm then set selectedChoice and break out of speciesSelect, else if return then set confirmMenu = true and keep going. display choices again
 					if(menuChoice == 1) {
 						//Get selected choice
-						SpeciesNotSelected = false;
 						selectedChoice = speciesObjList.get(keyChoices.get(raceChoice)); //(raceChoice);
 						break speciesSelect;
 					} else if(menuChoice == 2) {
