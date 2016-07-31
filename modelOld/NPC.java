@@ -1,4 +1,4 @@
-package model;
+package modelOld;
 
 public class NPC {
 

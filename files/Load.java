@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import model.*;
-
 /**  
 Converting binary data into different forms.
 
@@ -35,7 +33,7 @@ public final class Load
       {
          FileInputStream fileIn = new FileInputStream(INPUT_FILE_NAME);
          ObjectInputStream in = new ObjectInputStream(fileIn);
-         model.Char.character = (HashMap<String, LinkedHashMap<String, Double>>) in.readObject();
+         modelOld.Char.character = (HashMap<String, LinkedHashMap<String, Double>>) in.readObject();
          in.close();
          fileIn.close();
       }catch(IOException i)

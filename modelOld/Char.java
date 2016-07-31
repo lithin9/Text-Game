@@ -1,4 +1,4 @@
-package model;
+package modelOld;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -8,7 +8,6 @@ import java.util.Set;
 
 import files.Save;
 import files.Load;
-import model.Randomizer;
 
 public class Char 
 {

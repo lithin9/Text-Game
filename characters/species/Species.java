@@ -11,15 +11,17 @@ public class Species {
 	//TODO: set bonuses to each attribute
 	//TODO: set weight min max
 	//TODO: set height min max
-	//TODO: Think of other race based shit
+	//TODO: Think of other species based shit
 	protected LinkedHashMap<String, characters.species.speciesInterface> speciesObjList = new LinkedHashMap<String, characters.species.speciesInterface>();
+	public characters.species.speciesInterface selectedSpecies;
 	
 	public Species() {
+		//Collection of available species.
 		characters.species.Human human = new characters.species.Human();
 		speciesObjList.put("Human", human);
 	}
 	
-	public characters.species.speciesInterface selectNewSpecies() {
+	public void selectNewSpecies() {
 		Boolean SpeciesNotSelected = true;
 		characters.species.speciesInterface selectedChoice = new characters.species.Human();;
 		LinkedHashMap<Integer, String> keyChoices = new LinkedHashMap<Integer, String>();
@@ -30,31 +32,21 @@ public class Species {
 			
 			for(String key: detailKeys)
 			{
-				if(space%3 == 0)
-					output.out.println("\n");
-				output.out.println(++space+". "+key+": "+speciesObjList.get(key).getInfo());
-				keyChoices.put(space, key);
+				if(speciesObjList.get(key).playable) {
+					if(space % 3 == 0)
+						output.out.println("\n");
+					output.out.println(++space + ". " + key + ": " + speciesObjList.get(key).getInfo());
+					keyChoices.put(space, key);
+				}
 			}
-			String raceChoiceInput = input.nextLine();
-			Integer raceChoice = 0;
-			try{
-				raceChoice = Integer.parseInt(raceChoiceInput);
-			} catch(NumberFormatException e) {
-				raceChoice = -1;
-			}
-			output.out.println("Retreived input: "+raceChoiceInput);
+			Integer raceChoice = input.nextInt();
+
 			if(keyChoices.containsKey(raceChoice)) {
 				//Ask for choice
 				confirmMenu: while(true) {
 					//Get further details, ask if that's what they want, 
-					output.out.println("1. Confirm choice.\n2. Get more info about race.\n3. Go back to Race Selection\n");
-					String menuInput = input.nextLine();
-					Integer menuChoice = 0;
-					try{
-						menuChoice = Integer.parseInt(menuInput);
-					} catch(NumberFormatException e) {
-						menuChoice = -1;
-					}
+					output.out.println("1. Confirm choice.\n2. Get more info about species.\n3. Go back to Race Selection\n");
+					Integer menuChoice = input.nextInt();
 					//if confirm then set selectedChoice and break out of speciesSelect, else if return then set confirmMenu = true and keep going. display choices again
 					if(menuChoice == 1) {
 						//Get selected choice
@@ -68,14 +60,14 @@ public class Species {
 						output.out.println("\nReturning to Species list.\n\n");
 						break confirmMenu;
 					} else {
-						output.out.println("I didn't recognize that input as a valid choice: |"+menuInput+"|");
+						output.out.println("I didn't recognize that input as a valid choice.");
 					}
 				}
 			} else {
-				output.out.println("I didn't recognize that input as a valid choice: |"+raceChoiceInput+"|");
+				output.out.println("I didn't recognize that input as a valid choice.");
 			}
 			
 		}
-		return selectedChoice;
+		selectedSpecies = selectedChoice;
 	}
 }

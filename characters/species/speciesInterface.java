@@ -2,8 +2,9 @@ package characters.species;
 
 //TODO: 
 interface speciesInterface {
-	static String info = "";
+	String info = "";
+	Boolean playable = true;
 	
-	public String getInfo();
+	String getInfo();
 
 }

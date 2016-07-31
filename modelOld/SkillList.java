@@ -1,7 +1,6 @@
-package model;
+package modelOld;
 
 import java.util.LinkedHashMap;
-import java.util.HashMap;
 
 public class SkillList
 {

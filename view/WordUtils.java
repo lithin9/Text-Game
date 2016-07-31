@@ -391,7 +391,7 @@ package view;
       * <ul>
       * <li>Upper case character converts to Lower case</li>
       * <li>Title case character converts to Lower case</li>
-      * <li>Lower case character after Whitespace or at start converts to Title case</li>
+      * <li>Lower case character after Whitespace or at newChar converts to Title case</li>
       * <li>Other Lower case character converts to Upper case</li>
       * </ul>
       * 

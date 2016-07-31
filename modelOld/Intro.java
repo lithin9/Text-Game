@@ -1,8 +1,5 @@
-package model;
+package modelOld;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 
@@ -24,7 +21,7 @@ public class Intro
 	
 	public static void testIntro()
 	{
-		character.newCharacter();
+		//character.newCharacter();
 		//System.out.println()
 		String test = "This is a test of the word wrapping capabilities of this motherfuckinggoddamnit program that I downloaded. I don't know how many words this is, but I suppose we'll fucking find out, now won't we? Shiiiet.";
 		

@@ -28,4 +28,13 @@ public class In
 		//Return user input
 		return input;
 	}
+
+	public Integer nextInt() {
+		String userInput = this.nextLine();
+		try{
+			return Integer.parseInt(userInput);
+		} catch(NumberFormatException e) {
+			return -1;
+		}
+	}
 }
