@@ -1,12 +1,19 @@
 package characters.species;
 
-class Human implements characters.species.speciesInterface {
+class Human implements speciesInterface {
 	private static String info = "Human species info!";
 	private final Boolean isPlayable = true;
 
 	private final Double minHeight = 121.0; //Unit is CM
 	private final Double avgHeight = 182.0; //Unit is CM
 	private final Double maxHeight = 200.0; //Unit is CM
+
+	private final Double minOrganWeight = 9.5; //Unit is KG
+	private final Double maxOrganWeight = 18.9; //Unit is KG
+	private final Double minBoneWeight = 11.5; //Unit is KG
+	private final Double maxBoneWeight = 22.3; //Unit is KG
+	private final Double minFatWeight = 1.0; //Unit is KG
+	private final Double maxFatWeight = 16.1; //Unit is KG
 
 	//Attributes
 	//Melee attributes
@@ -56,6 +63,30 @@ class Human implements characters.species.speciesInterface {
 
 	public Boolean getIsPlayable() {
 		return isPlayable;
+	}
+
+	public Double getMinOrganWeight() {
+		return minOrganWeight;
+	}
+
+	public Double getMaxOrganWeight() {
+		return maxOrganWeight;
+	}
+
+	public Double getMinBoneWeight() {
+		return minBoneWeight;
+	}
+
+	public Double getMaxBoneWeight() {
+		return maxBoneWeight;
+	}
+
+	public Double getMinFatWeight() {
+		return minFatWeight;
+	}
+
+	public Double getMaxFatWeight() {
+		return maxFatWeight;
 	}
 
 	public Double getMinHeight() {

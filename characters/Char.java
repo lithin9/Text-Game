@@ -8,7 +8,7 @@ import characters.species.Species;
 public class Char {
 	private String name;
 	protected characters.species.Species species;
-	protected characters.attributes.Strength strength;
+	protected characters.attributes.Attribute attributes;
 
 	public String getName() {
 		return name;

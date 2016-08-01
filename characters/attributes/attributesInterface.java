@@ -2,8 +2,8 @@ package characters.attributes;
 
 //TODO: 
 interface attributesInterface {
-	static String info = "";
-	
-	public String getInfo();
+
+	Double baseVal = 0.0;
+	Double curVal = 0.0;
 
 }

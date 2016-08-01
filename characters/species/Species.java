@@ -10,8 +10,8 @@ public class Species {
 	//TODO: call each attribute and set a min + max
 	//TODO: set bonuses to each attribute
 	//TODO: Think of other species based shit
-	protected LinkedHashMap<String, characters.species.speciesInterface> speciesObjList = new LinkedHashMap<String, characters.species.speciesInterface>();
-	public characters.species.speciesInterface selectedSpecies;
+	protected LinkedHashMap<String, speciesInterface> speciesObjList = new LinkedHashMap<String, speciesInterface>();
+	public speciesInterface curSpecies;
 	
 	public Species() {
 		//Collection of available species.
@@ -21,7 +21,7 @@ public class Species {
 	
 	public void selectNewSpecies() {
 		Boolean SpeciesNotSelected = true;
-		characters.species.speciesInterface selectedChoice = null;
+		speciesInterface selectedChoice = null;
 		LinkedHashMap<Integer, String> keyChoices = new LinkedHashMap<Integer, String>();
 		speciesSelect: while(SpeciesNotSelected) {
 			//Output for each species
@@ -65,6 +65,6 @@ public class Species {
 			}
 			
 		}
-		selectedSpecies = selectedChoice;
+		curSpecies = selectedChoice;
 	}
 }
